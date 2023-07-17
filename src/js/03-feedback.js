@@ -7,8 +7,8 @@ let formData = {};
 
 const refs = {
     form: document.querySelector('.feedback-form'),
-    input: document.querySelector('.feedback-form  input'),
-    textarea: document.querySelector('.feedback-form textarea'),
+    // input: document.querySelector('.feedback-form  input'),
+    // textarea: document.querySelector('.feedback-form textarea'),
 };
 
 refs.form.addEventListener('input', throttle(onInputTextarea, 500));
@@ -18,13 +18,13 @@ initInputTextarea();
 
 function onInputTextarea(event) {
 // - створюємо об'єкт з полями email і message
-    formData = {
-        email: refs.input.value.trim(),
-        message: refs.textarea.value.trim(),
-    };
+    // formData = {
+    //     email: refs.input.value.trim(),
+    //     message: refs.textarea.value.trim(),
+    // };
 
 // - якщо одне значення
-// formData[event.target.name] = event.target.value.trim();
+formData[event.target.name] = event.target.value.trim();
 
 // - переводимо об'єкт в рядок
     const formDataJSON = JSON.stringify(formData);
@@ -40,9 +40,9 @@ function onFormSubmit(event) {
     event.preventDefault();
 
 //  - виводимо в консоль об'єкт з полями email і message
-   const { email, message } = event.currentTarget.elements;
-   console.log({ email: email.value.trim(), message: message.value.trim() });
-
+//    const { email, message } = event.currentTarget.elements;
+//    console.log({ email: email.value.trim(), message: message.value.trim() });
+   console.log(formData)
 // - очищуємо форму
     event.currentTarget.reset();
     formData = {};
@@ -54,17 +54,19 @@ function onFormSubmit(event) {
 function initInputTextarea() {
     try {
 // - отримуємо значення зі сховища
-    const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (!data) return;
+    formData = JSON.parse(data);
 // - якщо щось там було вже введено, поновлюємо
-    if(savedData) {
-    refs.input.value = savedData.email;
-    refs.textarea.value = savedData.message;
+    // if(savedData) {
+    // refs.input.value = savedData.email;
+    // refs.textarea.value = savedData.message;
 
-//     Object.entries(savedData).forEach(([name, value]) => {
-//       form.elements[name].value = value;
-//     });
+    Object.entries(savedData).forEach(([name, value]) => {
+        refs.form.elements[name].value = value;
+    });
 
-    };
+    
     } catch (error) {
         return;
     }
